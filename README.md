@@ -97,7 +97,7 @@ ASSUMPTIONS:
 
 Third party devices will push data to the system via HTTP POST requests. The data must be pushed in JSON format and have the following syntax/fields:
 
-'''css
+```css
 {  
    'key': DEVICE_KEY,
    'name': USER_NAME,
@@ -110,7 +110,7 @@ Third party devices will push data to the system via HTTP POST requests. The dat
             }
            ]
 }
-'''
+```
 
 * `DEVICE_KEY`: The device must have a key and that key must match the list of authorized keys in the device database
 * `USER_NAME`: Provide unique identifier for device user which must match the user assigned to the device in the device database
