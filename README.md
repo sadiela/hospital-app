@@ -122,8 +122,13 @@ Third party devices will push data to the system via HTTP POST requests. The dat
 
 Possible values for `DATA_TYPE`:
 * temperature
-* body_weight
+* weight
 * blood_pressure
+* pulse
+* oximeter
+* glucometer
+
+Eventually, this data will be stored in a database. For now, we add it to our "patients" JSON object under the proper patient. 
 
 ## DATABASE SCHEMA
 ### **User** Database
