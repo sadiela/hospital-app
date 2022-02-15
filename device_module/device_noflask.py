@@ -1,4 +1,7 @@
+import sys
+sys.path.append('..')
 from device_module.helper import *
+#from helper import *
 import json
 
 
@@ -24,3 +27,5 @@ def add_patient_data(json_obj):
             return {'error': 'No device key'}, 401
     else:
         return {'error':'Request must be JSON'}, 415
+
+print(is_json('NOT:A:JSON'))
