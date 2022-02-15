@@ -55,7 +55,7 @@ valid_data = {
 #print(patients)
 
 def test_not_json():
-    assert add_patient_data(json.dumps("NOT:A:JSON")) == ({'error':'Request must be JSON'}, 415)
+    assert add_patient_data(json.dumps('NOT:A:"JS"ON')) == ({'error':'Request must be JSON'}, 415)
 
 def test_no_key():
     assert add_patient_data(json.dumps(no_key)) == ({'error':'No device key'}, 401)
