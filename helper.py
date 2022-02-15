@@ -46,6 +46,7 @@ def add_data(patient_data):
                     p[cur_type][0].append(l[0])
                     p[cur_type][1].append(l[1])
 
+
 if __name__ == '__main__':
 
     print(patients)
