@@ -128,7 +128,12 @@ Possible values for `DATA_TYPE`:
 * oximeter
 * glucometer
 
-Eventually, this data will be stored in a database. For now, we add it to our "patients" JSON object under the proper patient. 
+**Error Conditions**
+* patient data is not sent as a JSON object
+* patient data has no key field
+* key is not in valid device keys list
+
+Eventually, this data will be stored in a database. For now, we add it to our "patients" JSON object under the proper patient (this is the "shell" implementation). 
 
 ## DATABASE SCHEMA
 ### **User** Database
