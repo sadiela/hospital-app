@@ -1,5 +1,5 @@
 import sys
-import pathlib
+from pathlib import Path
 sys.path.append('.')
 import json
 from device_module.helper import *
