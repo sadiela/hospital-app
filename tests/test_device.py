@@ -1,6 +1,11 @@
+import sys
+import pathlib
+sys.path.append('.')
 import json
-from helper import *
-from device_noflask import * 
+from device_module.helper import *
+from device_module.device_noflask import * 
+
+homeDirectory = Path('.')
 
 # dbdiagram.io
 no_key = {  
