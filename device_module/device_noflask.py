@@ -1,4 +1,4 @@
-from helper import *
+from device_module.helper import *
 import json
 
 
