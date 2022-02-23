@@ -25,7 +25,19 @@ patient_data_schema = {
     "name":{"type":"string"},
     "data":{"type":"list"}
   }
+}
 
+data_value_schema = {
+  "type":"object",
+  "properties": {
+    "data_type":{"type":"string"},
+    "values":{
+        "type":"array",
+        "items":{
+          "type":"array"
+        }
+        }
+  }
 }
 
 
