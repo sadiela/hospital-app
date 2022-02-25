@@ -169,3 +169,41 @@ Eventually, this data will be stored in a database. For now, we add it to our "p
    * View others' data 
 ### MP Database
 * 
+
+
+### MESSAGE MODULE
+* Message (no live video, more like imessage)
+    * Sender
+    * Recipient 
+    * Files
+    * Time
+    * Media
+    * Voice
+    * Text
+    * Previous chats
+    * Session ID
+    * Message ID
+Use MongoDB for messages as it lends itself better to unstructured data like text/image/voice messages.
+I will have a MESSAGE database with three collections: 
+* text: for text messages sent, will have the following fields:
+   * unique id
+   * session id
+   * sender
+   * recipient(s)
+   * timestamp
+   * message "value" --> string
+* image: for images sent, will have the following fields:
+   * unique id
+   * session id
+   * sender
+   * recipient(s)
+   * timestamp
+   * message "value" --> image file
+* voice: for voice messages, will have the following fields:
+   * unique id
+   * session id
+   * sender
+   * recipient(s)
+   * timestamp
+   * message "value" --> wav file
+
