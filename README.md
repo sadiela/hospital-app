@@ -103,10 +103,10 @@ Third party devices will push data to the system via HTTP POST requests. The dat
    'name': USER_NAME,
    'data': [
             {  'data_type': DATA_TYPE1,
-               'values': [[DATETIME_STRING1, VALUE1],[DATETIME_STRING2, VALUE2],....[DATETIME_STRINGN, VALUEN]]
+               'values': [[DATETIME_STRING1, DATETIME_STRING2..., DATETIME_STRINGN],[VALUE1, VALUE2..., VALUEN]]
             }
             {  'data_type': DATA_TYPE2,
-               'values': [[DATETIME_STRING1, VALUE1],[DATETIME_STRING2, VALUE2],....[DATETIME_STRINGN, VALUEN]]
+               'values': [[DATETIME_STRING1, DATETIME_STRING2..., DATETIME_STRINGN],[VALUE1, VALUE2..., VALUEN]]
             }
            ]
 }
@@ -115,7 +115,7 @@ Third party devices will push data to the system via HTTP POST requests. The dat
 * `DEVICE_KEY`: The device must have a key and that key must match the list of authorized keys in the device database
 * `USER_NAME`: Provide unique identifier for device user which must match the user assigned to the device in the device database
 * `DATA_TYPE`: The type of data the following values correspond to
-* `'values'`: List of tuples with the first element being the time a measurement was taken and the second element being the measurement value
+* `'values'`: Two lists with first list containing the timestamps for the measurements and the second list containing the values
    * `DATETIME_STRING`: Date/time when measurement was taken must be in the following format: "2020-03-27T19:46:21" --> `%Y-%m-%dT%H:%M:%S`. Assumed to be EST.
    * `VALUE`: Measurement value at the given time
 
@@ -169,3 +169,41 @@ Eventually, this data will be stored in a database. For now, we add it to our "p
    * View others' data 
 ### MP Database
 * 
+
+
+### MESSAGE MODULE
+* Message (no live video, more like imessage)
+    * Sender
+    * Recipient 
+    * Files
+    * Time
+    * Media
+    * Voice
+    * Text
+    * Previous chats
+    * Session ID
+    * Message ID
+Use MongoDB for messages as it lends itself better to unstructured data like text/image/voice messages.
+I will have a MESSAGE database with three collections: 
+* text: for text messages sent, will have the following fields:
+   * unique id
+   * session id
+   * sender
+   * recipient(s)
+   * timestamp
+   * message "value" --> string
+* image: for images sent, will have the following fields:
+   * unique id
+   * session id
+   * sender
+   * recipient(s)
+   * timestamp
+   * message "value" --> image file
+* voice: for voice messages, will have the following fields:
+   * unique id
+   * session id
+   * sender
+   * recipient(s)
+   * timestamp
+   * message "value" --> wav file
+
