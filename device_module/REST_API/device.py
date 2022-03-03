@@ -2,9 +2,13 @@ import requests
 import json
 from flask import Flask, request, jsonify
 from helper import *
+from flask_pymongo import PyMongo
 
 # creating a Flask app
 app = Flask(__name__)
+
+mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/health_db")
+db = mongodb_client.db
 
 def add_data(patient_data):
     patient_name = patient_data['name']
