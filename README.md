@@ -1,72 +1,34 @@
 # Hospital Application
-Platform to monitor patients at home or in the hospitals.
+Platform to monitor patients at home or in the hospitals. See wiki for detailed user stories and documentation for each module.
 
-Users: 
-* Patients
-* Medical professionals (nurses/doctors)
-* Administrators
-* Developers
-    * Application developers
-    * Device integrators
-    * ML Scientists
- 
-## User Stories
-**Administrators**:
-* Add users to system
-* Assign and change user roles (note that one user can have multiple roles)
-    * Patient
-    * Nurse
-    * Doctor
-    * Family member
-    * Admin
-* Provide interfaces to third party medical device makers to have their device feed data to the system
-    * Thermometer
-    * Pulse
-    * Blood pressure
-    * Glucometer
-    * Weight
-* Disable/enable device makers or app developers
+# Setup 
+1. Set up virtual environment for project
+2. Install requirements from `requirements.txt`:
 
-**Medical Professionals**:
-* Browse patients
-* Assign a medical device to a patient
-* Assign alert and scheduling for medical measurement
-    * Patient measures blood pressure daily; MP receives alert if not done
-    * Temperature higher/lower than particular value; MP gets alert if measurement outside acceptable range
-* Input data for patient (what kind of data?)
-* Chat w/ patients using text, voice, video
-* Read transcripts of patient uploaded videos/messages
-* Search for keywords in messages/chats
-* Calendar to show open time slots for appointments 
-* See all appointments booked at any time
-
-**Patients**
-* Enter measurements
-* Write text/upload video or voice message to MP
-* Book an appointment with MP
-* View measurements 
+# Branching Strategy
+Will work on different modules in their own branches and merge to main after thorough unit testing for integration testing. 
 
 ## Modules
-**Device module**
-* Support many datatypes
-* API that 3rd party devices will use to publish data to system
-* JSON format input
-**Calendar Module**
-* Display all appointments for MPs
-* Display available appointment times for patients
-**Alerts Module**
-* Create alert
-* Send alerts to MPs
-**Chat Module**
-* MP/Patient communication
-**Voice Transcriber**
-* Voice -> text 
-**Administrative**
-* Create users, assign roles
-**Data Management**
-* Store all data for other modules
-**Application Interfaces**
-* How users interact with system
+* **Device module**
+    * Support many datatypes
+    * API that 3rd party devices will use to publish data to system
+    * JSON format input
+* **Calendar Module**
+    * Display all appointments for MPs
+    * Display available appointment times for patients
+* **Alerts Module**
+    * Create alert
+    * Send alerts to MPs
+* **Chat Module**
+    * MP/Patient communication
+* **Voice Transcriber**
+    * Voice -> text 
+* **Administrative**
+    * Create users, assign roles
+* **Data Management**
+    * Store all data for other modules
+* **Application Interfaces**
+    * How users interact with system
 
 ## Phases
 ### Phase 0 (DUE 2/13/2021)
@@ -88,122 +50,3 @@ Users:
     * Implement unit tests for the module
     * Implement a simulation to send data via an example program to help users of your system
     * DOCUMENT INTERFACE WELL
-    
-FOR NOW: HARD CODE DEVICE KEYS
-
-## Device Interface Documentation
-ASSUMPTIONS:
-* Each device only associated with a single patient
-
-Third party devices will push data to the system via HTTP POST requests. The data must be pushed in JSON format and have the following syntax/fields:
-
-```css
-{  
-   'key': DEVICE_KEY,
-   'name': USER_NAME,
-   'data': [
-            {  'data_type': DATA_TYPE1,
-               'values': [[DATETIME_STRING1, DATETIME_STRING2..., DATETIME_STRINGN],[VALUE1, VALUE2..., VALUEN]]
-            }
-            {  'data_type': DATA_TYPE2,
-               'values': [[DATETIME_STRING1, DATETIME_STRING2..., DATETIME_STRINGN],[VALUE1, VALUE2..., VALUEN]]
-            }
-           ]
-}
-```
-
-* `DEVICE_KEY`: The device must have a key and that key must match the list of authorized keys in the device database
-* `USER_NAME`: Provide unique identifier for device user which must match the user assigned to the device in the device database
-* `DATA_TYPE`: The type of data the following values correspond to
-* `'values'`: Two lists with first list containing the timestamps for the measurements and the second list containing the values
-   * `DATETIME_STRING`: Date/time when measurement was taken must be in the following format: "2020-03-27T19:46:21" --> `%Y-%m-%dT%H:%M:%S`. Assumed to be EST.
-   * `VALUE`: Measurement value at the given time
-
-
-Possible values for `DATA_TYPE`:
-* temperature
-* weight
-* blood_pressure
-* pulse
-* oximeter
-* glucometer
-
-**Error Conditions**
-* patient data is not sent as a JSON object
-* patient data has no key field
-* key is not in valid device keys list
-
-Eventually, this data will be stored in a database. For now, we add it to our "patients" JSON object under the proper patient (this is the "shell" implementation). 
-
-## DATABASE SCHEMA
-### **User** Database
-* Rows represent system users
-* Columns: 
-   * Unique ID
-   * First name
-   * Last name
-   * Address
-   * DOB
-   * Sex
-   * Role
-   * PCP (if patient) 
-### Health Measurements Database(s)
-* One of these for each data type (bp, weight, height, temp, etc.)
-* Rows represent readings
-* Each row has the following columns:
-   * **User** ID
-   * Temperature
-   * Time
-### Device Database
-* Device Name
-* MAC Address(?)
-* Device Key
-* Assigned **user**
-* Data types supported
-### Roles Database
-* Row for each role
-* Columns represent permissions for different actions (binary entries) for given users
-   * Create new user
-   * Make appointment
-   * View own data
-   * View others' data 
-### MP Database
-* 
-
-
-### MESSAGE MODULE
-* Message (no live video, more like imessage)
-    * Sender
-    * Recipient 
-    * Files
-    * Time
-    * Media
-    * Voice
-    * Text
-    * Previous chats
-    * Session ID
-    * Message ID
-Use MongoDB for messages as it lends itself better to unstructured data like text/image/voice messages.
-I will have a MESSAGE database with three collections: 
-* text: for text messages sent, will have the following fields:
-   * unique id
-   * session id
-   * sender
-   * recipient(s)
-   * timestamp
-   * message "value" --> string
-* image: for images sent, will have the following fields:
-   * unique id
-   * session id
-   * sender
-   * recipient(s)
-   * timestamp
-   * message "value" --> image file
-* voice: for voice messages, will have the following fields:
-   * unique id
-   * session id
-   * sender
-   * recipient(s)
-   * timestamp
-   * message "value" --> wav file
-
