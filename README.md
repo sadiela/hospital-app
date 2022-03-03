@@ -1,5 +1,12 @@
 # Hospital Application
-Platform to monitor patients at home or in the hospitals. See wiki for detailed user stories and documentation for each module. 
+Platform to monitor patients at home or in the hospitals. See wiki for detailed user stories and documentation for each module.
+
+# Setup 
+1. Set up virtual environment for project
+2. Install requirements from `requirements.txt`:
+
+# Branching Strategy
+Will work on different modules in their own branches and merge to main after thorough unit testing for integration testing. 
 
 ## Modules
 * **Device module**
