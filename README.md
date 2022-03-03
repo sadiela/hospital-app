@@ -169,3 +169,15 @@ Eventually, this data will be stored in a database. For now, we add it to our "p
    * View others' data 
 ### MP Database
 * 
+
+
+### VM API SETUP:
+
+verify: `python3 app.py`
+
+run gunicorn: `gunicorn -b 0.0.0.0:8000 app:app`
+
+enable service: 
+```sudo systemctl daemon-reload
+   sudo systemctl start helloworld
+   sudo systemctl enable helloworld```
