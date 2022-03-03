@@ -3,6 +3,8 @@ import json
 from flask import Flask, request, jsonify
 #from helper import *
 import datetime
+from helper import *
+from flask_pymongo import PyMongo
 
 # creating a Flask app
 app = Flask(__name__)
@@ -85,6 +87,8 @@ def check_json_format(json_dic):
     else: 
         return_val = 400
     return return_val
+mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/health_db")
+db = mongodb_client.db
 
 def add_data(patient_data):
     patient_name = patient_data['name']

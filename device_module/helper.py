@@ -34,18 +34,6 @@ patients= [{'name':'John Doe',
 
 device_keys = ['abc', 'def', 'ghi']
 
-def add_data(patient_data):
-    patient_name = patient_data['name']
-    idx = -1
-    for p in patients:
-        if p['name'] == patient_name:
-            for d in patient_data['data']:
-                cur_type = d['data_type']
-                print(cur_type)
-                for l in d['values']:
-                    p[cur_type][0].append(l[0])
-                    p[cur_type][1].append(l[1])
-
 if __name__ == '__main__':
 
     print(patients)

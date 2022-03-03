@@ -1,72 +1,34 @@
 # Hospital Application
-Platform to monitor patients at home or in the hospitals.
+Platform to monitor patients at home or in the hospitals. See wiki for detailed user stories and documentation for each module.
 
-Users: 
-* Patients
-* Medical professionals (nurses/doctors)
-* Administrators
-* Developers
-    * Application developers
-    * Device integrators
-    * ML Scientists
- 
-## User Stories
-**Administrators**:
-* Add users to system
-* Assign and change user roles (note that one user can have multiple roles)
-    * Patient
-    * Nurse
-    * Doctor
-    * Family member
-    * Admin
-* Provide interfaces to third party medical device makers to have their device feed data to the system
-    * Thermometer
-    * Pulse
-    * Blood pressure
-    * Glucometer
-    * Weight
-* Disable/enable device makers or app developers
+# Setup 
+1. Set up virtual environment for project
+2. Install requirements from `requirements.txt`:
 
-**Medical Professionals**:
-* Browse patients
-* Assign a medical device to a patient
-* Assign alert and scheduling for medical measurement
-    * Patient measures blood pressure daily; MP receives alert if not done
-    * Temperature higher/lower than particular value; MP gets alert if measurement outside acceptable range
-* Input data for patient (what kind of data?)
-* Chat w/ patients using text, voice, video
-* Read transcripts of patient uploaded videos/messages
-* Search for keywords in messages/chats
-* Calendar to show open time slots for appointments 
-* See all appointments booked at any time
-
-**Patients**
-* Enter measurements
-* Write text/upload video or voice message to MP
-* Book an appointment with MP
-* View measurements 
+# Branching Strategy
+Will work on different modules in their own branches and merge to main after thorough unit testing for integration testing. 
 
 ## Modules
-**Device module**
-* Support many datatypes
-* API that 3rd party devices will use to publish data to system
-* JSON format input
-**Calendar Module**
-* Display all appointments for MPs
-* Display available appointment times for patients
-**Alerts Module**
-* Create alert
-* Send alerts to MPs
-**Chat Module**
-* MP/Patient communication
-**Voice Transcriber**
-* Voice -> text 
-**Administrative**
-* Create users, assign roles
-**Data Management**
-* Store all data for other modules
-**Application Interfaces**
-* How users interact with system
+* **Device module**
+    * Support many datatypes
+    * API that 3rd party devices will use to publish data to system
+    * JSON format input
+* **Calendar Module**
+    * Display all appointments for MPs
+    * Display available appointment times for patients
+* **Alerts Module**
+    * Create alert
+    * Send alerts to MPs
+* **Chat Module**
+    * MP/Patient communication
+* **Voice Transcriber**
+    * Voice -> text 
+* **Administrative**
+    * Create users, assign roles
+* **Data Management**
+    * Store all data for other modules
+* **Application Interfaces**
+    * How users interact with system
 
 ## Phases
 ### Phase 0 (DUE 2/13/2021)
@@ -88,6 +50,7 @@ Users:
     * Implement unit tests for the module
     * Implement a simulation to send data via an example program to help users of your system
     * DOCUMENT INTERFACE WELL
+<<<<<<< HEAD
     
 FOR NOW: HARD CODE DEVICE KEYS
 
@@ -181,3 +144,5 @@ enable service:
 ```sudo systemctl daemon-reload
    sudo systemctl start helloworld
    sudo systemctl enable helloworld```
+=======
+>>>>>>> f2557711948bd9d4cd0f9aee80aa7321ee36402b
