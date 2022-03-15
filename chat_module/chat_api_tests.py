@@ -22,9 +22,9 @@ chat_object2 = {
 }
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-res1 = put('http://127.0.0.1:5000/chat/0', data=json.dumps(chat_object), headers=headers)#.json()
+res1 = put('http://127.0.0.1:5000/chat', data=json.dumps(chat_object), headers=headers)#.json()
 print(res1)
-res2 = put('http://127.0.0.1:5000/chat/1', data=json.dumps(chat_object2), headers=headers)#.json()
+res2 = put('http://127.0.0.1:5000/chat', data=json.dumps(chat_object2), headers=headers)#.json()
 
 
-print(get('http://127.0.0.1:5000/session/1'))#.json()
+print(get('http://127.0.0.1:5000/chat/session/1'))#.json()
