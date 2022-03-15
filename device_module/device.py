@@ -1,8 +1,30 @@
 import requests 
 import json
-from flask import Flask, request, jsonify
-from helper import *
+from flask import Flask, request, jsonify, Blueprint
+#from helper import *
 from flask_pymongo import PyMongo
+from flask_restful import fields, marshal_with, reqparse, Resource
+
+device_blueprint = Blueprint('device_blueprint', __name__)
+
+@device_blueprint.route('/')
+def index():
+    return "This is the device module"
+
+'''
+def key(key_str):
+    if key in device_keys:
+        return key 
+    else:
+        raise ValueError('{} is not a valid device key'.format(key_str))
+
+
+
+post_parser = reqparse.RequestParser()
+post_parser.add_argument('key', dest='key', location='form',
+                        required=True, type=key, help='The device key')
+post_parser.add_argument('name', dest='name', location='form',
+                        required=True, help='The name of the patient')
 
 # creating a Flask app
 app = Flask(__name__)
@@ -45,7 +67,16 @@ def add_patient_data():
     else:
         return {'error':'Request must be JSON'}, 415
 
+'''
 
-if __name__ == '__main__':
-  
-    app.run(debug = True)
+if __name__ == '__main__': # FOR TESTING!
+    app1 = Flask(__name__)
+    app1.register_blueprint(device_blueprint, url_prefix='/device')
+
+    '''# DB SETUP
+    mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/health_db")
+    db = mongodb_client.db
+    db.chat.drop()
+    chats = db.chat # chat collection in database'''''''''
+
+    app1.run(debug=True)
