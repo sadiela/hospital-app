@@ -1,5 +1,6 @@
 from requests import put, get
 import json
+import pymongo
 
 chat_object = {
     'chatid': 0,
@@ -21,10 +22,15 @@ chat_object2 = {
     'message':'How are you doing?'
 }
 
+## CLEAR DB BEFORE TESTING ##
+mongodb_client = pymongo.MongoClient("mongodb+srv://sadiela:xs5MaYfQUs8M9E5O@cluster0.ipuos.mongodb.net/healthDB?retryWrites=true&w=majority")
+x = mongodb_client.db.chats.delete_many({})
+print(x.deleted_count, "documents deleted")
+
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-res1 = put('http://127.0.0.1:5000/chat', data=json.dumps(chat_object), headers=headers)#.json()
+res1 = put('http://127.0.0.1:5000/chat/add', data=json.dumps(chat_object), headers=headers)#.json()
 print(res1)
-res2 = put('http://127.0.0.1:5000/chat', data=json.dumps(chat_object2), headers=headers)#.json()
+res2 = put('http://127.0.0.1:5000/chat/add', data=json.dumps(chat_object2), headers=headers)#.json()
 
 
 print(get('http://127.0.0.1:5000/chat/session/1'))#.json()

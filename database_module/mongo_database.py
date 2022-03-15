@@ -6,7 +6,8 @@ import pymongo
 from flask_pymongo import PyMongo
 
 
-mongodb_client = PyMongo()
+mongodb_client = pymongo.MongoClient("mongodb+srv://sadiela:xs5MaYfQUs8M9E5O@cluster0.ipuos.mongodb.net/healthDB?retryWrites=true&w=majority")
+
 
 '''class DB(object):
     uri="mongodb://localhost:27017/health_db"

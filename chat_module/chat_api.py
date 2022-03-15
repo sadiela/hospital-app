@@ -3,10 +3,11 @@ import json
 from flask import Flask, request, jsonify, Blueprint
 #from helper import *
 from flask_pymongo import PyMongo
+import pymongo
 from database_module.mongo_database import mongodb_client
 from flask_restful import fields, marshal_with, reqparse, Resource
 
-
+mongodb_client = pymongo.MongoClient("mongodb+srv://sadiela:xs5MaYfQUs8M9E5O@cluster0.ipuos.mongodb.net/healthDB?retryWrites=true&w=majority")
 chat_blueprint = Blueprint('chat_blueprint', __name__)
 
 #db = mongodb_client.db
@@ -24,18 +25,17 @@ chat_blueprint = Blueprint('chat_blueprint', __name__)
 def custom_find(coll, key, value):
     res = []
     if value is not None:
-        for x in coll.find({key:value}):
-            del x['_id']
-            print(x)
-            res.append(x)
-    else:
-        for x in coll.find():
-            del x['_id']
-            res.append(x)
+        vals = coll.find({key:value})
+    else: 
+        vals = coll.find()
+    for x in vals:
+        del x['_id']
+        print(x)
+        res.append(x)
     return res
 
 #@marshal_with
-@chat_blueprint.route('/', methods=['GET', 'POST'])
+@chat_blueprint.route('/add', methods=['GET', 'POST', 'PUT'])
 def add_chat():
     print("ADDING CHAT")
     if request.is_json: # check data is in correct format
@@ -43,7 +43,8 @@ def add_chat():
     print("CHAT DATA:", chat_data)
     chats = mongodb_client.db.chats
     res = chats.insert_one(chat_data)
-    return "Added a chat"
+    print("CHAT ADDED")
+    return str(res)
 
 @chat_blueprint.route('/message/<chatid>', methods=['GET'])
 def get_message(chatid):
@@ -56,21 +57,32 @@ def get_message(chatid):
 
 @chat_blueprint.route('/session/<sessionid>', methods=['GET'])
 def get_session_messages(sessionid):
-    print("Getting messages from session: " + str(sessionid))
+    print("Getting messages from session: " + str(sessionid), type(sessionid))
     chats = mongodb_client.db.chats
-    messages = custom_find(chats, 'sessionid', sessionid)
+    messages = custom_find(chats, 'sessionid', int(sessionid))
     print("OBJECT NOW:", messages)
-    print("TYPE:", type(messages))
     return json.dumps(messages), 200
 
 @chat_blueprint.route('/user/<userid>', methods=['GET'])
 def get_user_messages(userid):
-    print("Getting messages from user" + str(userid))
+    print("Getting messages from user" + userid)
     chats = mongodb_client.db.chats
     messages = custom_find(chats, 'sender', userid)
     print("OBJECT NOW:", messages)
     print("TYPE:", type(messages))
     return json.dumps(messages), 200
+
+@chat_blueprint.route('/messages', methods=['GET'])
+def get_all_messages():
+    print("Getting messages")
+    chats = mongodb_client.db.chats
+    output = []
+    messages = chats.find()
+    for i, x in enumerate(messages):
+        print(i, x)
+        del x['_id']
+        output.append(x)
+    return json.dumps(output), 200
 
 @chat_blueprint.route('/delete/<chatid>', methods=['POST'])
 def delete_message(chatid):

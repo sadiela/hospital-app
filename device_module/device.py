@@ -1,10 +1,12 @@
-from crypt import methods
 import requests 
 import json
 from flask import Flask, request, jsonify, Blueprint
 #from helper import *
 from flask_pymongo import PyMongo
 from flask_restful import fields, marshal_with, reqparse, Resource
+import pymongo
+
+mongodb_client = pymongo.MongoClient("mongodb+srv://sadiela:xs5MaYfQUs8M9E5O@cluster0.ipuos.mongodb.net/healthDB?retryWrites=true&w=majority")
 
 device_blueprint = Blueprint('device_blueprint', __name__)
 
