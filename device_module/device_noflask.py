@@ -35,7 +35,7 @@ data_value_schema = {
         "type":"array",
         "items":{
           "type":"array"
-        }
+          }
         }
   }
 }

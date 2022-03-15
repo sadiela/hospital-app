@@ -1,6 +1,32 @@
-from pymongo import MongoClient
-import gridfs
+#from flask_pymongo import PyMongo
+#from pymongo import MongoClient
+#import gridfs
+from os import stat
+import pymongo
+from flask_pymongo import PyMongo
 
+
+mongodb_client = PyMongo()
+
+'''class DB(object):
+    uri="mongodb://localhost:27017/health_db"
+
+    @staticmethod
+    def init():
+        client = pymongo.MongoClient(DB.uri)
+        DB.DATABASE = client['db']
+    
+    @staticmethod
+    def insert(collection, data):
+        DB.DATABASE[collection].insert(data)
+
+    @staticmethod
+    def find_one(collection, query):
+        return DB.DATABASE[collection].find_one(query)'''
+
+
+
+'''
 #db = MongoClient().gridfs_example
 
 # Connect to MongoDB
@@ -50,4 +76,4 @@ print(chatInstance)
 print("ALL DOCUMENTS")
 cursor = db.chat.find({})
 for document in cursor:
-    print(document)
+    print(document)'''
