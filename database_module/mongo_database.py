@@ -1,9 +1,7 @@
 #from flask_pymongo import PyMongo
 #from pymongo import MongoClient
-#import gridfs
 from os import stat
 import pymongo
-from flask_pymongo import PyMongo
 
 
 mongodb_client = pymongo.MongoClient("mongodb+srv://sadiela:xs5MaYfQUs8M9E5O@cluster0.ipuos.mongodb.net/healthDB?retryWrites=true&w=majority")

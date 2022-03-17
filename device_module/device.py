@@ -3,10 +3,12 @@ import json
 from flask import Flask, request, jsonify, Blueprint
 #from helper import *
 from flask_pymongo import PyMongo
-from flask_restful import fields, marshal_with, reqparse, Resource
 import pymongo
+from marshmallow import Schema, fields
+from database_module.mongo_database import mongodb_client
 
-mongodb_client = pymongo.MongoClient("mongodb+srv://sadiela:xs5MaYfQUs8M9E5O@cluster0.ipuos.mongodb.net/healthDB?retryWrites=true&w=majority")
+db = mongodb_client['healthDB']
+devices = db['patient_data']
 
 device_blueprint = Blueprint('device_blueprint', __name__)
 
@@ -15,6 +17,13 @@ device_blueprint = Blueprint('device_blueprint', __name__)
 #   - post data for a patient
 #   - get device list
 #   - get patient list
+
+class DataSchema(Schema):
+    key = fields.String(required=True)
+    name = fields.String(required=True)
+    data_type = fields.String(required=True)
+    values = fields.List(fields.Float, required=True)
+    timestamps = fields.List(fields.DateTime, required=True)
 
 @device_blueprint.route('/add-data', methods=['POST'])
 def add_patient_data():
