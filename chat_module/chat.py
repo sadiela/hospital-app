@@ -1,18 +1,13 @@
 from xml.dom import ValidationErr
 import requests 
 import json
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, abort, request, jsonify, Blueprint
 #from helper import *
 import pymongo
 #import certifi
 from database_module.mongo_database import mongodb_client
 from marshmallow import Schema, fields
 
-'''uri = "mongodb+srv://cluster0.ipuos.mongodb.net/healthDB?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
-client = pymongo.MongoClient(uri,
-                     tls=True,
-                     tlsCertificateKeyFile='/Users/sadiela/Documents/courses_spring_2022/ec530/cert/X509-cert-1835095331508356146.pem')
-'''
 db = mongodb_client['healthDB']
 chats = db['chats']
 chats.create_index([("chatid", pymongo.ASCENDING)], unique=True)
@@ -71,8 +66,6 @@ def add_chat():
         except ValidationErr as err:
             print(err.messages)
             print(err.valid_data)
-        print("CHAT DATA TYPE:", type(chat_data))
-        print("CHAT DATA:", chat_data)
         id_vals = chats.distinct('chatid')
         new_id = insertion_index(id_vals)
         chat_data['chatid'] = new_id
@@ -132,35 +125,12 @@ def delete_message(chatid):
 def page_not_found(e):
     return "<h1>404</h1><p>The resource (chat) could not be found.</p>", 404
 
-'''
 def abort_if_chat_doesnt_exist(id_type, resource_id):
     # findone fails
     chat = chats.find_one({id_type:resource_id})
     if not chat.acknowledge: # not in chats:
         abort(404, message="id {} in {} doesn't exist".format(resource_id, id_type))
 
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello': 'world'}
-
-class Chat(Resource):
-    def get(self, chatid=None):
-        if chatid is not None:
-            chat = chats.find_one({'chatid':chatid})
-        else:
-            chat = chats.find_one({'chatid':chatid})
-        del chat['_id']
-        print("OBJECT NOW:", chat)
-        print("TYPE:", type(chat))
-        return json.dumps(chat), 200
-    def put(self):
-        data = request.get_json()
-        print('DATA:', data)
-        print("TYPE:", type(data))
-        result = chats.insert_one(data)
-        return {'result':result.acknowledged}, 200
-
-'''
 
 if __name__ == '__main__':
     app1 = Flask(__name__)
