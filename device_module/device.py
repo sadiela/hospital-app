@@ -1,3 +1,4 @@
+from xml.dom import ValidationErr
 import requests 
 import json
 from flask import Flask, request, jsonify, Blueprint
@@ -8,12 +9,19 @@ from marshmallow import Schema, fields
 from database_module.mongo_database import mongodb_client
 
 db = mongodb_client['healthDB']
-devices = db['patient_data']
+devices = db['devices'] # --> device id, patient
+### DATA ###
+blood_pressure = db['blood_pressure']
+weight = db['weight']
+temp = db['temp']
+pulse = db['pulse']
+oximeter = db['oximeter']
+glucometer = db['glucometer']
 
 device_blueprint = Blueprint('device_blueprint', __name__)
 
 # Need to be able to:
-#   - get patient's data
+#   - get patient's data (all types)
 #   - post data for a patient
 #   - get device list
 #   - get patient list
@@ -25,9 +33,17 @@ class DataSchema(Schema):
     values = fields.List(fields.Float, required=True)
     timestamps = fields.List(fields.DateTime, required=True)
 
-@device_blueprint.route('/add-data', methods=['POST'])
+@device_blueprint.route('/add-data', methods=['POST', 'GET', 'PUT'])
 def add_patient_data():
-    return "Adding data for patient"
+    if request.is_json:
+        patient_data = request.get_json()
+        try:
+            patient_data = DataSchema().load(patient_data)
+        except ValidationErr as err:
+            print(err.messages)
+            print(err.valid_data)
+        
+    return "Invalid Data", 400
 
 @device_blueprint.route('/patients/<patientid>', methods=['GET'])
 def get_patient_data(patientid):
@@ -39,7 +55,7 @@ def get_device_list():
 
 @device_blueprint.route('/patients/all', methods=['GET'])
 def get_patient_list():
-    return "Returning list of patients"
+    return "Returning list of patient names"
 
 @device_blueprint.errorhandler(404)
 def page_not_found(e):
