@@ -3,109 +3,100 @@ sys.path.append('..')
 from helper import *
 #from helper import *
 import json
+import requests
 #from jsonschema import validate
+import pymongo
 
-patient_data = {  
-   'key': 'abc',
-   'name': 'John Doe',
-   'data': [
-            {  'data_type': 'blood_pressure',
-               'values': [['2020-03-27T19:46:21', '120/80']]
-            },
-            {  'data_type': 'temperature',
-               'values': [['2020-03-27T19:46:21', 98.6],['2020-03-28T19:46:21', 99.6]]
-            }
-           ]
-    }
+#temperature data
+'''data_example = {
+  'dataid':0,
+  'patientid':0,
+  'data_type':'temperature',
+  'timestamp':'2020-03-27T19:46:21',
+  'value':98.9,
+}'''
 
-patient_data_schema = {
-  "type":"object",
-  "properties": {
-    "key":{"type":"string"},
-    "name":{"type":"string"},
-    "data":{"type":"list"}
-  }
-}
-
-data_value_schema = {
-  "type":"object",
-  "properties": {
-    "data_type":{"type":"string"},
-    "values":{
-        "type":"array",
-        "items":{
-          "type":"array"
-          }
-        }
-  }
-}
-
-'''
-# implement as separate function or 
-def format_checking(patient_data):
-  try:
-    validate(instance=patient_data, schema=[patient_data_schema])
-    for data_object in patient_data["data"]:
-      validate(instance=data_object, schema=[data_value_schema])
-  except jsonschema.exceptions.ValidationError as err:
-    print("err")
-  return True'''
-
-
-def add_data(patient_data):
-    patient_name = patient_data['name']
-    idx = -1
-    for p in patients:
-        if p['name'] == patient_name:
-            for d in patient_data['data']:
-                cur_type = d['data_type']
-                print(cur_type)
-                for l in d['values']:
-                    p[cur_type][0].append(l[0])
-                    p[cur_type][1].append(l[1])
-
-def is_json(text):
-  print("IS JSON?", text)
-  try:
-      return json.loads(text)
-  except ValueError as e:
-      print('invalid json: %s' % e)
-      return False # or: raise
-
-def add_patient_data(json_obj):
-    if is_json(json_obj): # check data is in correct format
-      print("IS A JSON")
-      patient_data = json.loads(json_obj) 
-      print(patient_data, type(patient_data))
-      input("Continue...")
-      if 'key' in patient_data.keys():
-          key = patient_data['key']
-          if key in device_keys: # check device has a key & that key is in the list of device keys
-              returnval, code = add_data(patient_data) # could have more errors in adding the data
-              return returnval, code #key, 200
-          else:
-              return {'error': 'Unknown device'}, 403
-      else:
-          return {'error': 'No device key'}, 401
-    else:
-        return {'error':'Request must be JSON'}, 415
-
-#print(is_json('NOT:A:JSON'))
-#print(patients)
-if __name__ == '__main__':
-  patient_data = {  
+data_to_push = {
   'key': 'abc',
-  'name': 'John Doe',
-  'data': [
-          {  'data_type': 'blood_pressure',
-              'values': [['2020-03-27T19:46:21', '120/80']]
-          },
-          {  'data_type': 'temperature',
-              'values': [['2020-03-27T19:46:21', 98.6],['2020-03-28T19:46:21', 99.6]]
-          }
-          ]
-  }
+  'patientid': 'JohnDoe',
+  'data_type': 'weight',
+  'values': [170, 175, 172],
+  'timestamps': ['2020-03-27T19:46:21', '2020-03-28T19:46:21', '2020-03-28T19:56:21']
+}
 
-  patient_data = str(patient_data)
+data_to_push2 = {
+  'key': 'def',
+  'patientid': 'JaneDoe',
+  'data_type': 'pulse',
+  'values': [60, 115, 72],
+  'timestamps': ['2020-03-27T19:46:21', '2020-03-28T19:46:21', '2020-03-28T19:56:21']
+}
 
-  add_patient_data(patient_data)
+invalid_data_to_push = {
+  'key': 'def',
+  'patientid': 'JaneDoe',
+  #'data_type': 'blood_pressure',
+  'values': [170, 175, 172],
+  'timestamps': ['2020-03-27T19:46:21', '2020-03-28T19:46:21', '2020-03-28T19:56:21']
+}
+
+invalid_key_data = {
+  'key': 'ghi',
+  'patientid': 'JaneDoe',
+  'data_type': 'weight',
+  'values': [170, 175, 172],
+  'timestamps': ['2020-03-27T19:46:21', '2020-03-28T19:46:21', '2020-03-28T19:56:21']
+}
+
+
+## CONNECT TO DB ##
+filepath = r'C:\Users\sadie\Documents\BU\spring_2022\ec530\hospital-app\cert\X509-cert-1835095331508356146.pem'
+
+uri  = r"mongodb+srv://cluster0.ipuos.mongodb.net/healthDB?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
+mongodb_client = pymongo.MongoClient(uri,
+                     tls=True,
+                     tlsCertificateKeyFile=filepath)
+
+db = mongodb_client['healthDB']
+health_data = db['health_data']
+devices = db['devices']
+doc_count = health_data.count_documents({})
+print(doc_count)
+
+### CLEAR OUT DB COLLECTIONS ###
+x = health_data.delete_many({})
+print(x.deleted_count, "documents deleted")
+x2 = devices.delete_many({})
+print(x2.deleted_count, "documents deleted")
+
+# Add some devices to device DB:
+device1 = {'deviceid':'abc'}
+device2 = {'deviceid':'def'}
+devices.insert_one(device1)
+devices.insert_one(device2)
+
+# TEST ADDING DATA
+headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+r = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(data_to_push), headers=headers)
+print(r)
+r = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(data_to_push2), headers=headers)
+print(r)
+r = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(invalid_data_to_push), headers=headers)
+print(r)
+r = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(invalid_key_data), headers=headers)
+print(r)
+
+# TEST GETTING DATA # 
+print(requests.get('http://127.0.0.1:5000/device/patients/JohnDoe/weight'))
+print(requests.get('http://127.0.0.1:5000/device/patients/JaneDoe/pulse'))
+print(requests.get('http://127.0.0.1:5000/device/patients/JaneDoe/blood_pressure'))
+print(requests.get('http://127.0.0.1:5000/device/patients/JanetDoe/pulse'))
+
+
+
+''' 
+Test Cases:
+1. JSON w/o key field
+2. JSON w/ key not in device_keys list
+3. Correctly-formatted JSON
+'''

@@ -50,7 +50,6 @@ Will work on different modules in their own branches and merge to main after tho
     * Implement unit tests for the module
     * Implement a simulation to send data via an example program to help users of your system
     * DOCUMENT INTERFACE WELL
-<<<<<<< HEAD
     
 FOR NOW: HARD CODE DEVICE KEYS
 
@@ -144,5 +143,3 @@ enable service:
 ```sudo systemctl daemon-reload
    sudo systemctl start helloworld
    sudo systemctl enable helloworld```
-=======
->>>>>>> f2557711948bd9d4cd0f9aee80aa7321ee36402b

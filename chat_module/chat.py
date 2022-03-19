@@ -16,7 +16,7 @@ chats.create_index([("chatid", pymongo.ASCENDING)], unique=True)
 chat_blueprint = Blueprint('chat_blueprint', __name__)
 
 class ChatSchema(Schema):
-    chatid = fields.Int(required=True)
+    chatid = fields.Int()#required=True)
     sessionid = fields.Int(required=True)
     sender = fields.Str(required=True)
     recipients = fields.List(fields.String, required=True)
@@ -66,13 +66,16 @@ def add_chat():
         except ValidationErr as err:
             print(err.messages)
             print(err.valid_data)
+            print("INVALID CHAT DATA")
+            return "Invalid data", 400
         id_vals = chats.distinct('chatid')
         new_id = insertion_index(id_vals)
         chat_data['chatid'] = new_id
         res = chats.insert_one(chat_data)
         print("CHAT ADDED")
         return str(res)
-    return "Invalid data", 400
+    print("INVALID REQUEST DATA")
+    return "INVALID REQUEST DATA", 400
 
 @chat_blueprint.route('/message/<chatid>', methods=['GET'])
 def get_message(chatid):
@@ -80,8 +83,9 @@ def get_message(chatid):
     #db = client['healthDB']
     #chats = db['chats']
     message = custom_find(chats, 'chatid', int(chatid))
-    print("OBJECT NOW:", message)
-    print("TYPE:", type(message))
+    if len(message)==0:
+        print("NO MESSAGES FOUND")
+        return "NO MESSAGE WITH ID {chatid} FOUND", 200
     return jsonify(message), 200
 
 @chat_blueprint.route('/session/<sessionid>', methods=['GET'])
@@ -90,7 +94,10 @@ def get_session_messages(sessionid):
     #db = client['healthDB']
     #chats = db['chats']
     messages = custom_find(chats, 'sessionid', int(sessionid))
-    print("OBJECT NOW:", messages)
+    print("OBJECT NOW:", messages, len(messages))
+    if len(messages)==0:
+        print("NO MESSAGES FOUND")
+        return "NO MESSAGES WITH SESSION ID {sessionid} FOUND", 200
     return jsonify(messages), 200
 
 @chat_blueprint.route('/user/<userid>', methods=['GET'])
@@ -99,8 +106,9 @@ def get_user_messages(userid):
     #db = client['healthDB']
     #chats = db['chats']
     messages = custom_find(chats, 'sender', userid)
-    print("OBJECT NOW:", messages)
-    print("TYPE:", type(messages))
+    if len(messages)==0:
+        print("NO MESSAGES FOUND")
+        return "NO MESSAGES WITH USER ID {userid} FOUND", 200
     return jsonify(messages), 200
 
 @chat_blueprint.route('/messages', methods=['GET'])
@@ -112,6 +120,9 @@ def get_all_messages():
         print(i, x)
         del x['_id']
         output.append(x)
+    if len(messages)==0:
+        print("NO MESSAGES FOUND")
+        return "NO MESSAGES FOUND", 200
     return jsonify(output), 200
 
 @chat_blueprint.route('/delete/<chatid>', methods=['GET', 'POST'])
@@ -119,7 +130,7 @@ def delete_message(chatid):
     print("Deleting message with id:" + chatid)
     #chats = mongodb_client.db.chats
     res = chats.delete_one({'chatid':int(chatid)})
-    return str(res.acknowledged), 200
+    return "Deleted successfully:" +str(res.acknowledged), 200
 
 @chat_blueprint.errorhandler(404)
 def page_not_found(e):

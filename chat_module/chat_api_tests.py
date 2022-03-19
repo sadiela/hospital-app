@@ -71,10 +71,12 @@ invalid_chat_object1 = {
 }
 
 ## CONNECT TO DB ##
+filepath = r'C:\Users\sadie\Documents\BU\spring_2022\ec530\hospital-app\cert\X509-cert-1835095331508356146.pem'
+
 uri  = r"mongodb+srv://cluster0.ipuos.mongodb.net/healthDB?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
 mongodb_client = pymongo.MongoClient(uri,
                      tls=True,
-                     tlsCertificateKeyFile='/Users/sadiela/Documents/courses_spring_2022/ec530/cert/X509-cert-1835095331508356146.pem')
+                     tlsCertificateKeyFile=filepath)
 
 db = mongodb_client['healthDB']
 chats_collection = db['chats']
@@ -92,6 +94,7 @@ res2 = put('http://127.0.0.1:5000/chat/add', data=json.dumps(chat_object2), head
 res3 = put('http://127.0.0.1:5000/chat/add', data=json.dumps(chat_object3), headers=headers)#.json()
 res4 = put('http://127.0.0.1:5000/chat/add', data=json.dumps(invalid_chat_object), headers=headers)#.json()
 res5 = put('http://127.0.0.1:5000/chat/add', data=json.dumps(invalid_chat_object1), headers=headers)#.json()
+
 
 print(chats_collection.distinct('chatid'))
 print(chats_collection.distinct('text_message'))
@@ -115,7 +118,5 @@ print(get('http://127.0.0.1:5000/chat/messages'))
 print(get('http://127.0.0.1:5000/chat/delete/0'))
 print(get('http://127.0.0.1:5000/chat/delete/2'))
 
-
 print(chats_collection.distinct('chatid'))
 print(chats_collection.distinct('text_message'))
-
