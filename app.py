@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint
+from flask import Flask
 #from flask_restful import Api, Resource, url_for
 from chat_module.chat import chat_blueprint
 from device_module.device import device_blueprint
