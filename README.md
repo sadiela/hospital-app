@@ -53,50 +53,6 @@ Will work on different modules in their own branches and merge to main after tho
     
 FOR NOW: HARD CODE DEVICE KEYS
 
-## Device Interface Documentation
-ASSUMPTIONS:
-* Each device only associated with a single patient
-
-Third party devices will push data to the system via HTTP POST requests. The data must be pushed in JSON format and have the following syntax/fields:
-
-```css
-{  
-   'key': DEVICE_KEY,
-   'name': USER_NAME,
-   'data': [
-            {  'data_type': DATA_TYPE1,
-               'values': [[DATETIME_STRING1, VALUE1],[DATETIME_STRING2, VALUE2],....[DATETIME_STRINGN, VALUEN]]
-            }
-            {  'data_type': DATA_TYPE2,
-               'values': [[DATETIME_STRING1, VALUE1],[DATETIME_STRING2, VALUE2],....[DATETIME_STRINGN, VALUEN]]
-            }
-           ]
-}
-```
-
-* `DEVICE_KEY`: The device must have a key and that key must match the list of authorized keys in the device database
-* `USER_NAME`: Provide unique identifier for device user which must match the user assigned to the device in the device database
-* `DATA_TYPE`: The type of data the following values correspond to
-* `'values'`: List of tuples with the first element being the time a measurement was taken and the second element being the measurement value
-   * `DATETIME_STRING`: Date/time when measurement was taken must be in the following format: "2020-03-27T19:46:21" --> `%Y-%m-%dT%H:%M:%S`. Assumed to be EST.
-   * `VALUE`: Measurement value at the given time
-
-
-Possible values for `DATA_TYPE`:
-* temperature
-* weight
-* blood_pressure
-* pulse
-* oximeter
-* glucometer
-
-**Error Conditions**
-* patient data is not sent as a JSON object
-* patient data has no key field
-* key is not in valid device keys list
-
-Eventually, this data will be stored in a database. For now, we add it to our "patients" JSON object under the proper patient (this is the "shell" implementation). 
-
 ## DATABASE SCHEMA
 ### **User** Database
 * Rows represent system users
@@ -114,7 +70,7 @@ Eventually, this data will be stored in a database. For now, we add it to our "p
 * Rows represent readings
 * Each row has the following columns:
    * **User** ID
-   * Temperature
+   * Value
    * Time
 ### Device Database
 * Device Name
