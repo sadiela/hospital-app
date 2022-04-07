@@ -37,6 +37,16 @@ class DataSchema(Schema):
     values = fields.List(fields.Float, required=True)
     timestamps = fields.List(fields.DateTime, required=True)
 
+# DEVICE DB FUNCTIONS
+def addDevice():
+    print("Added")
+
+def modifyDevice():
+    print("Modified")
+
+def removeDevice(): 
+    print("Deleted")
+
 @device_blueprint.route('/add-data', methods=['POST', 'GET', 'PUT'])
 def add_patient_data():
     print("ADDING DATA")
@@ -78,7 +88,6 @@ def page_not_found(e):
 @device_blueprint.route('/')
 def index():
     return "This is the device module"
-
 
 if __name__ == '__main__': # FOR TESTING!
     app1 = Flask(__name__)

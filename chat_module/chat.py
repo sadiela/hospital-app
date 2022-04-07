@@ -23,7 +23,7 @@ class ChatSchema(Schema):
     timestamp = fields.DateTime(required=True)
     text_message = fields.Str()
     voice_message = fields.Raw()
-    video_message = fields.Raw()
+    image_message = fields.Raw()
 
 #db = mongodb_client.db
 #print(type(db))
@@ -47,12 +47,10 @@ def insertion_index(nums):
 def custom_find(coll, key, value):
     res = []
     if value is not None:
-        vals = coll.find({key:value})
+        vals = coll.find({key:value}, projection={'_id': False})
     else: 
-        vals = coll.find()
+        vals = coll.find(projection={'_id': False})
     for x in vals:
-        del x['_id']
-        print(x)
         res.append(x)
     return res
 
