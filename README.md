@@ -13,18 +13,19 @@ Will work on different modules in their own branches and merge to main after tho
     * Support many datatypes
     * API that 3rd party devices will use to publish data to system
     * JSON format input
+* **Chat Module**
+    * MP/Patient communication
+* **Administrative**
+    * Create users, assign roles
+----- Eventually add... -----
 * **Calendar Module**
     * Display all appointments for MPs
     * Display available appointment times for patients
 * **Alerts Module**
     * Create alert
     * Send alerts to MPs
-* **Chat Module**
-    * MP/Patient communication
 * **Voice Transcriber**
     * Voice -> text 
-* **Administrative**
-    * Create users, assign roles
 * **Data Management**
     * Store all data for other modules
 * **Application Interfaces**
