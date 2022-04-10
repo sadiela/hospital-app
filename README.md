@@ -17,7 +17,9 @@ Will work on different modules in their own branches and merge to main after tho
     * MP/Patient communication
 * **Administrative**
     * Create users, assign roles
+
 ----- Eventually add... -----
+
 * **Calendar Module**
     * Display all appointments for MPs
     * Display available appointment times for patients
