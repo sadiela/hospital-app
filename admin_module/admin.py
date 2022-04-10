@@ -14,8 +14,8 @@ from database_module.mongo_database import mongodb_client
 db = mongodb_client['healthDB']
 devices = db['devices'] # --> device id, patient
 people = db['people']
-people.create_index([("userid", pymongo.ASCENDING)], unique=True)
-devices.create_index([("userid", pymongo.ASCENDING)], unique=True)
+#people.create_index([("userid", pymongo.ASCENDING)], unique=True)
+#devices.create_index([("userid", pymongo.ASCENDING)], unique=True)
 
 admin_blueprint = Blueprint('admin_blueprint', __name__)
 
@@ -41,8 +41,8 @@ def insertion_index(nums):
 class UserSchema(Schema):
     userid = fields.Int(required=True)
     username = fields.String(required=True)
-    devices = fields.List(fields.String)
     role = fields.Int(required=True)
+    devices = fields.List(fields.String)
     doctors = fields.List(fields.Int()) # list of userids
     patients = fields.List(fields.Int()) # list of userids
 
@@ -68,22 +68,22 @@ def get_device_list():
         return "NO DEVICES FOUND", 200
     return jsonify(device_list), 200
 
-@admin_blueprint.route('/people/<patientid>', methods=['GET'])
+@admin_blueprint.route('/doctors/<patientid>', methods=['GET'])
 def get_doctor_list(patientid): # get all patients, doctors, or admins
     doctor_ids = people.find_one({'userid':patientid}, projection=['doctors'])
     # check if all these people are still in the DB
     return jsonify(doctor_ids), 200
 
-@admin_blueprint.route('/people/<doctorid>', methods=['GET'])
+@admin_blueprint.route('/patients/<doctorid>', methods=['GET'])
 def get_patient_list(doctorid): # get all patients, doctors, or admins
     patient_ids = people.find_one({'userid':doctorid}, projection=['patients'])
     # check if all these people are still in the DB
     return jsonify(patient_ids), 200
 
-@admin_blueprint.route('/people/<role>', methods=['GET'])
-def get_user_list(role): # get all patients, doctors, or admins
-    desired_role = role_key[role]
-    person_list = custom_find(people, 'role', role)
+@admin_blueprint.route('/people/<roleid>', methods=['GET'])
+def get_user_list(roleid): # get all patients, doctors, or admins
+    #desired_role = role_key[role]
+    person_list = custom_find(people, 'role', roleid)
     if len(person_list)==0:
         print("NO PEOPLE WITH ROLE {role} FOUND")
         return "NO PEOPLE WITH ROLE {role} FOUND", 200

@@ -45,7 +45,7 @@ chat_object2 = {
 chat_object3 = {
     'chatid': 2,
     'sessionid': 1,
-    'sender':'Dr. Smith', # use id from people database
+    'sender':'DrSmith', # use id from people database
     'recipients':['JohnDoe'], # probably use ids for this
     'timestamp':'2020-03-27T19:48:00',
     'text_message': 'I am well. Thank you for asking!',

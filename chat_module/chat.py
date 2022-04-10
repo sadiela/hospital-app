@@ -10,7 +10,7 @@ from marshmallow import Schema, fields
 
 db = mongodb_client['healthDB']
 chats = db['chats']
-chats.create_index([("chatid", pymongo.ASCENDING)], unique=True)
+#chats.create_index([("chatid", pymongo.ASCENDING)], unique=True)
 
 
 chat_blueprint = Blueprint('chat_blueprint', __name__)
@@ -118,7 +118,7 @@ def get_all_messages():
         print(i, x)
         del x['_id']
         output.append(x)
-    if len(messages)==0:
+    if len(output)==0:
         print("NO MESSAGES FOUND")
         return "NO MESSAGES FOUND", 200
     return jsonify(output), 200
