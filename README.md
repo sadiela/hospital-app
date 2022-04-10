@@ -1,5 +1,5 @@
 # Hospital Application
-Platform to monitor patients at home or in the hospitals. See the [wiki](https://github.com/sadiela/hospital-app/wiki) for detailed user stories and documentation for each module.
+Platform to monitor patients at home or in the hospitals. See the [wiki](https://github.com/sadiela/hospital-app/wiki) for detailed user stories, documentation, and unit tests/results for each module.
 
 # Setup 
 1. Set up virtual environment for project
