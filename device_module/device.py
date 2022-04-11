@@ -10,12 +10,12 @@ db = mongodb_client['healthDB']
 devices = db['devices'] # --> device id, patient
 health_data = db['health_data']
 ### DATA ###
-blood_pressure = db['blood_pressure']
-weight = db['weight']
-temp = db['temp']
-pulse = db['pulse']
-oximeter = db['oximeter']
-glucometer = db['glucometer']
+#blood_pressure = db['blood_pressure']
+#weight = db['weight']
+#temp = db['temp']
+#pulse = db['pulse']
+#oximeter = db['oximeter']
+#glucometer = db['glucometer']
 
 device_blueprint = Blueprint('device_blueprint', __name__)
 
@@ -36,15 +36,33 @@ class DataSchema(Schema):
     values = fields.List(fields.Float, required=True)
     timestamps = fields.List(fields.DateTime, required=True)
 
+class DeviceSchema(Schema):
+    deviceid = fields.String(required=True)
+
 # DEVICE DB FUNCTIONS
-def addDevice():
-    print("Added")
+
 
 def modifyDevice():
     print("Modified")
 
 def removeDevice(): 
     print("Deleted")
+
+@device_blueprint.route('/add-device', methods=['POST'])
+def addDevice():
+    print("Added")
+    if request.is_json:
+        data= request.get_json()
+        try: 
+            device = DeviceSchema().load(data)
+        except ValidationError as err:
+            print(err.messages, err.valid_data)
+            return "Invalid data", 400
+        if data['deviceid'] not in devices.distinct('deviceid'):
+            devices.insert_one(data)
+            return f"Device with id {data['deviceid']} added", 200
+        else: 
+            return f"Device with id {data['deviceid']} already exists!", 200
 
 @device_blueprint.route('/add-data', methods=['POST', 'GET', 'PUT'])
 def add_patient_data():
@@ -58,14 +76,21 @@ def add_patient_data():
             print(err.valid_data)
             return "Invalid data", 400
         if data['key'] not in devices.distinct('deviceid'):
-            return "INVALID DATA KEY", 400
+            return "INVALID DEVICE KEY", 400
         for v, t in zip(data['values'], data['timestamps']):
             id_vals = health_data.distinct('chatid')
             new_id = insertion_index(id_vals)
-            data_item = {'dataid':new_id, 'patientid':data['patientid'], 'data_type':data['data_type'], 'timestamp':t, 'value':v}
+            data_item = {'dataid':new_id, 'source_device':data['key'], 'patientid':data['patientid'], 'data_type':data['data_type'], 'timestamp':t, 'value':v}
             health_data.insert_one(data_item)
         return "ALL DATA ADDED", 200
     return "Invalid Data", 400
+
+@device_blueprint.route('/delete-data/<deviceid>')
+def delete_device_data(deviceid):
+    # delete all data from given device
+    delete_res = health_data.delete_many({'source_device':deviceid})
+    return "Delete result:" +str(delete_res.acknowledged), 200
+
 
 @device_blueprint.route('/patients/<patientid>/<datatype>', methods=['GET'])
 def get_patient_data(patientid, datatype):

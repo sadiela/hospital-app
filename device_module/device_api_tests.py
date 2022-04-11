@@ -48,8 +48,8 @@ invalid_key_data = {
 
 
 ## CONNECT TO DB ##
-#filepath = r'C:\Users\sadie\Documents\BU\spring_2022\ec530\hospital-app\cert\X509-cert-1835095331508356146.pem'
-filepath = r'/Users/sadiela/Documents/courses_spring_2022/ec530/cert/X509-cert-1835095331508356146.pem'
+filepath = r'C:\Users\sadie\Documents\BU\spring_2022\ec530\hospital-app\cert\X509-cert-1835095331508356146.pem'
+#filepath = r'/Users/sadiela/Documents/courses_spring_2022/ec530/cert/X509-cert-1835095331508356146.pem'
 
 uri  = r"mongodb+srv://cluster0.ipuos.mongodb.net/healthDB?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
 mongodb_client = pymongo.MongoClient(uri,
@@ -71,11 +71,21 @@ print(x2.deleted_count, "documents deleted")
 # Add some devices to device DB:
 device1 = {'deviceid':'abc'}
 device2 = {'deviceid':'def'}
-devices.insert_one(device1)
-devices.insert_one(device2)
+device3 = {'device!':'ghi'}
+#devices.insert_one(device1)
+#devices.insert_one(device2)
+
+headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+
+# TEST ADDING DEVICES
+r0 = requests.post('http://127.0.0.1:5000/device/add-device', data=json.dumps(device1), headers=headers)
+print(r0,r0.content.decode())
+r01 = requests.post('http://127.0.0.1:5000/device/add-device', data=json.dumps(device2), headers=headers)
+print(r01,r01.content.decode())
+r02 = requests.post('http://127.0.0.1:5000/device/add-device', data=json.dumps(device3), headers=headers)
+print(r02,r02.content.decode())
 
 # TEST ADDING DATA
-headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 r1 = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(data_to_push), headers=headers)
 print(r1,r1.content.decode())
 r2 = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(data_to_push2), headers=headers)

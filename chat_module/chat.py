@@ -125,7 +125,7 @@ def delete_message(chatid):
     print("Deleting message with id:" + chatid)
     #chats = mongodb_client.db.chats
     res = chats.delete_one({'chatid':int(chatid)})
-    return "Deleted successfully:" +str(res.acknowledged), 200
+    return "Delete result:" +str(res.acknowledged), 200
 
 @chat_blueprint.errorhandler(404)
 def page_not_found(e):

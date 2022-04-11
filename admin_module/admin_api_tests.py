@@ -50,10 +50,14 @@ invalid_user = {
     'role':0
 }
 
+device1 = {'deviceid':'abc'}
+device2 = {'deviceid':'def'}
+device3 = {'deviceid':'ghi'}
+
 ### ADD USER TESTS ###
 ## CONNECT TO DB ##
-#filepath = r'C:\Users\sadie\Documents\BU\spring_2022\ec530\hospital-app\cert\X509-cert-1835095331508356146.pem'
-filepath = r'/Users/sadiela/Documents/courses_spring_2022/ec530/cert/X509-cert-1835095331508356146.pem'
+filepath = r'C:\Users\sadie\Documents\BU\spring_2022\ec530\hospital-app\cert\X509-cert-1835095331508356146.pem'
+#filepath = r'/Users/sadiela/Documents/courses_spring_2022/ec530/cert/X509-cert-1835095331508356146.pem'
 uri  = r"mongodb+srv://cluster0.ipuos.mongodb.net/healthDB?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
 mongodb_client = pymongo.MongoClient(uri,
                      tls=True,
@@ -73,6 +77,10 @@ device_delete = device_collection.delete_many({})
 print(user_delete.deleted_count, "documents deleted")
 print(device_delete.deleted_count, "documents deleted")
 
+device_collection.insert_one(device1)
+device_collection.insert_one(device2)
+#device_collection.insert_one(device3)
+
 ## PERFORM ADD TESTS (THREE VALID, TWO INVALID)
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 res1 = put('http://127.0.0.1:5000/admin/add_user', data=json.dumps(patient1), headers=headers)#.json()
@@ -89,6 +97,12 @@ print(res1,res1.content.decode())
 ### LIST DEVICES TEST ###
 res6 = get('http://127.0.0.1:5000/admin/devices')
 print(res6, res6.content.decode())
+
+### ASSIGN DEVICES TEST ###
+res06 = put('http://127.0.0.1:5000/admin/assign_device/def/0')
+print(res06, res06.content.decode())
+res006 = put('http://127.0.0.1:5000/admin/assign_device/jkl/0')
+print(res006, res006.content.decode())
 
 ### LIST PATIENTS TEST ###
 res7 = get('http://127.0.0.1:5000/admin/people/0')

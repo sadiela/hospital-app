@@ -70,6 +70,25 @@ def get_device_list():
         return "NO DEVICES FOUND", 200
     return jsonify(device_list), 200
 
+@admin_blueprint.route('/assign_device/<deviceid>/<patientid>', methods=['GET', 'POST', 'PUT'])
+def assign_device(deviceid, patientid):
+    # assign the given device to the given patient
+    if deviceid in devices.distinct('deviceid'):
+        print("device exists")
+        devicelist = people.find_one({'userid':patientid}, projection=['devices'])
+        print("DEVICE LIST:", devicelist)
+        if devicelist is None:
+            devicelist = [deviceid]
+        elif deviceid not in devicelist:
+            devicelist.append(deviceid)
+        else:
+            return f"device with id {deviceid} already assigned to user {patientid}", 200
+        newvalues = {"$set": {"devices":devicelist}}
+        people.update_one({'userid':patientid}, newvalues)
+    else:
+        return f"No device with id {deviceid} exists", 400
+    return f"added device {deviceid} to user {patientid}"
+
 @admin_blueprint.route('/doctors/<patientid>', methods=['GET'])
 def get_doctor_list(patientid): # get all patients, doctors, or admins
     doctor_ids = people.find_one({'userid':int(patientid)}, projection=['doctors'])
