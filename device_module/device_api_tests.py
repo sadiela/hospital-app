@@ -106,6 +106,16 @@ print(r7,r7.content.decode())
 r8 = requests.get('http://127.0.0.1:5000/device/patients/JanetDoe/pulse')
 print(r8,r8.content.decode())
 
+# TEST DELETING DATA #
+r9 = requests.get('http://127.0.0.1:5000/device/delete-data/def')
+print(r9,r9.content.decode())
+print(health_data.distinct('source_device'))
+
+# TEST DELETING DEVICES #
+r10 = requests.get('http://127.0.0.1:5000/device/delete-device/def')
+print(r10,r10.content.decode())
+print(devices.distinct('deviceid'))
+
 
 ''' 
 Test Cases:

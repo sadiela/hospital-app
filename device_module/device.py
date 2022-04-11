@@ -41,13 +41,6 @@ class DeviceSchema(Schema):
 
 # DEVICE DB FUNCTIONS
 
-
-def modifyDevice():
-    print("Modified")
-
-def removeDevice(): 
-    print("Deleted")
-
 @device_blueprint.route('/add-device', methods=['POST'])
 def addDevice():
     print("Added")
@@ -85,12 +78,16 @@ def add_patient_data():
         return "ALL DATA ADDED", 200
     return "Invalid Data", 400
 
-@device_blueprint.route('/delete-data/<deviceid>')
+@device_blueprint.route('/delete-data/<deviceid>',  methods=['POST', 'GET', 'PUT'])
 def delete_device_data(deviceid):
     # delete all data from given device
     delete_res = health_data.delete_many({'source_device':deviceid})
     return "Delete result:" +str(delete_res.acknowledged), 200
 
+@device_blueprint.route('delete-device/<deviceid>',  methods=['POST', 'GET', 'PUT'])
+def delete_device(deviceid):
+    delete_res = devices.delete_many({'deviceid': deviceid})
+    return "Delete result:" +str(delete_res.acknowledged), 200
 
 @device_blueprint.route('/patients/<patientid>/<datatype>', methods=['GET'])
 def get_patient_data(patientid, datatype):
