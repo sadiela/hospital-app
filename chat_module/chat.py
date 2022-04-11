@@ -142,7 +142,5 @@ if __name__ == '__main__':
     app1 = Flask(__name__)
     app1.register_blueprint(chat_blueprint, url_prefix='/chat')
 
-    '''# DB SETUP
-    '''''''''
 
     app1.run(debug=True)

@@ -92,8 +92,3 @@ if __name__ == '__main__': # FOR TESTING!
     app1 = Flask(__name__)
     app1.register_blueprint(device_blueprint, url_prefix='/device')
 
-    '''# DB SETUP
-    mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/health_db")
-    db = mongodb_client.db
-    db.chat.drop()
-    chats = db.chat # chat collection in database'''
