@@ -1,14 +1,14 @@
 # This file contains functions that can only be performed by admins
 # Only Admins can modify the USER and DEVICE databases
 # KIWI
-from xml.dom import ValidationErr
+#from xml.dom import ValidationErr
 import requests 
 import json
 from flask import Flask, request, jsonify, Blueprint
 #from helper import *
 from flask_pymongo import PyMongo
 import pymongo
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, ValidationError
 from database_module.mongo_database import mongodb_client
 
 db = mongodb_client['healthDB']
@@ -34,6 +34,8 @@ role_key = {
 def insertion_index(nums):
     n = 0 
     s = set(nums)
+    if len(s)==0:
+        return 0
     #while n in s:
     #    n += 1
     return max(s) + 1
@@ -70,20 +72,24 @@ def get_device_list():
 
 @admin_blueprint.route('/doctors/<patientid>', methods=['GET'])
 def get_doctor_list(patientid): # get all patients, doctors, or admins
-    doctor_ids = people.find_one({'userid':patientid}, projection=['doctors'])
+    doctor_ids = people.find_one({'userid':int(patientid)}, projection=['doctors'])
     # check if all these people are still in the DB
+    del doctor_ids['_id']
+    print("DOCTOR IDS:", doctor_ids)
     return jsonify(doctor_ids), 200
 
 @admin_blueprint.route('/patients/<doctorid>', methods=['GET'])
 def get_patient_list(doctorid): # get all patients, doctors, or admins
-    patient_ids = people.find_one({'userid':doctorid}, projection=['patients'])
+    patient_ids = people.find_one({'userid':int(doctorid)}, projection=['patients'])
     # check if all these people are still in the DB
+    del patient_ids['_id']
+    print("PATIENTIDS:", patient_ids)
     return jsonify(patient_ids), 200
 
 @admin_blueprint.route('/people/<roleid>', methods=['GET'])
 def get_user_list(roleid): # get all patients, doctors, or admins
     #desired_role = role_key[role]
-    person_list = custom_find(people, 'role', roleid)
+    person_list = custom_find(people, 'role', int(roleid))
     if len(person_list)==0:
         print("NO PEOPLE WITH ROLE {role} FOUND")
         return "NO PEOPLE WITH ROLE {role} FOUND", 200
@@ -96,7 +102,7 @@ def add_chat():
         user_data = request.get_json() 
         try:
             user_data = UserSchema().load(user_data)
-        except ValidationErr as err:
+        except ValidationError as err:
             print(err.messages)
             print(err.valid_data)
             print("INVALID USER DATA")
@@ -105,21 +111,24 @@ def add_chat():
         new_id = insertion_index(id_vals)
         user_data['userid'] = new_id
         # add all devices linked to user
-        for d in user_data['devices']:
-            if d not in devices.distinct('deviceid'):
-                addDevice(d)
+        if 'devices' in user_data.keys():
+            for d in user_data['devices']:
+                if d not in devices.distinct('deviceid'):
+                    addDevice(d)
         res = people.insert_one(user_data)
-        print("CHAT ADDED")
-        return str(res)
+        print("USER ADDED")
+        return str(res.acknowledged)
     print("INVALID REQUEST DATA")
     return "INVALID REQUEST DATA", 400
 
 @admin_blueprint.route('/remove_user/<userid>', methods=['GET', 'POST', 'PUT'])
 def remove_user(userid):
+    print("ID", userid)
     # check if userid is in database
-    res = people.delete_one({ "userid": userid })
-    print("DELETE RESULT:", res)
-    return "deleted user {userid} from user database"
+    res = people.delete_one({ "userid": int(userid)})
+    print(res, people.distinct('userid'))
+    print("DELETE RESULT:", str(res.acknowledged))
+    return f"deleted user {userid} from user database"
 
 '''
 @admin_blueprint.route('/assign_doctor/<doctorid>', methods=['GET'])

@@ -1,10 +1,9 @@
-from xml.dom import ValidationErr
 import requests 
 import json
 from flask import Flask, request, jsonify, Blueprint
 from flask_pymongo import PyMongo
 import pymongo
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, ValidationError
 from database_module.mongo_database import mongodb_client
 
 db = mongodb_client['healthDB']
@@ -54,7 +53,7 @@ def add_patient_data():
         data = request.get_json()
         try:
             data = DataSchema().load(data)
-        except ValidationErr as err:
+        except ValidationError as err:
             print(err.messages)
             print(err.valid_data)
             return "Invalid data", 400
@@ -78,7 +77,7 @@ def get_patient_data(patientid, datatype):
         res.append(x)
     if len(res)==0:
         print("NO DATA FOUND")
-        return "NO {datatype} DATA FOR PATIENT {patientid} FOUND", 200
+        return f"NO {datatype} DATA FOR PATIENT {patientid} FOUND", 200
     return jsonify(res), 200
 
 @device_blueprint.errorhandler(404)

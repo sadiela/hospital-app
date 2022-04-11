@@ -1,4 +1,3 @@
-from xml.dom import ValidationErr
 import requests 
 import json
 from flask import Flask, abort, request, jsonify, Blueprint
@@ -6,12 +5,10 @@ from flask import Flask, abort, request, jsonify, Blueprint
 import pymongo
 #import certifi
 from database_module.mongo_database import mongodb_client
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, ValidationError
 
 db = mongodb_client['healthDB']
 chats = db['chats']
-#chats.create_index([("chatid", pymongo.ASCENDING)], unique=True)
-
 
 chat_blueprint = Blueprint('chat_blueprint', __name__)
 
@@ -61,7 +58,7 @@ def add_chat():
         chat_data = request.get_json() 
         try:
             chat_data = ChatSchema().load(chat_data)
-        except ValidationErr as err:
+        except ValidationError as err:
             print(err.messages)
             print(err.valid_data)
             print("INVALID CHAT DATA")
@@ -71,7 +68,7 @@ def add_chat():
         chat_data['chatid'] = new_id
         res = chats.insert_one(chat_data)
         print("CHAT ADDED")
-        return str(res)
+        return str(res.acknowledged)
     print("INVALID REQUEST DATA")
     return "INVALID REQUEST DATA", 400
 

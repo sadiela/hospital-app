@@ -1,7 +1,5 @@
 import sys
 sys.path.append('..')
-from helper import *
-#from helper import *
 import json
 import requests
 #from jsonschema import validate
@@ -50,7 +48,8 @@ invalid_key_data = {
 
 
 ## CONNECT TO DB ##
-filepath = r'C:\Users\sadie\Documents\BU\spring_2022\ec530\hospital-app\cert\X509-cert-1835095331508356146.pem'
+#filepath = r'C:\Users\sadie\Documents\BU\spring_2022\ec530\hospital-app\cert\X509-cert-1835095331508356146.pem'
+filepath = r'/Users/sadiela/Documents/courses_spring_2022/ec530/cert/X509-cert-1835095331508356146.pem'
 
 uri  = r"mongodb+srv://cluster0.ipuos.mongodb.net/healthDB?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority"
 mongodb_client = pymongo.MongoClient(uri,
@@ -77,21 +76,25 @@ devices.insert_one(device2)
 
 # TEST ADDING DATA
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-r = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(data_to_push), headers=headers)
-print(r)
-r = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(data_to_push2), headers=headers)
-print(r)
-r = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(invalid_data_to_push), headers=headers)
-print(r)
-r = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(invalid_key_data), headers=headers)
-print(r)
+r1 = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(data_to_push), headers=headers)
+print(r1,r1.content.decode())
+r2 = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(data_to_push2), headers=headers)
+print(r2,r2.content.decode())
+r3 = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(invalid_data_to_push), headers=headers)
+print(r3,r3.content.decode())
+r4 = requests.post('http://127.0.0.1:5000/device/add-data', data=json.dumps(invalid_key_data), headers=headers)
+print(r4,r4.content.decode())
+
 
 # TEST GETTING DATA # 
-print(requests.get('http://127.0.0.1:5000/device/patients/JohnDoe/weight'))
-print(requests.get('http://127.0.0.1:5000/device/patients/JaneDoe/pulse'))
-print(requests.get('http://127.0.0.1:5000/device/patients/JaneDoe/blood_pressure'))
-print(requests.get('http://127.0.0.1:5000/device/patients/JanetDoe/pulse'))
-
+r5 = requests.get('http://127.0.0.1:5000/device/patients/JohnDoe/weight')
+print(r5,r5.content.decode())
+r6 = requests.get('http://127.0.0.1:5000/device/patients/JaneDoe/pulse')
+print(r6,r6.content.decode())
+r7 = requests.get('http://127.0.0.1:5000/device/patients/JaneDoe/blood_pres')
+print(r7,r7.content.decode())
+r8 = requests.get('http://127.0.0.1:5000/device/patients/JanetDoe/pulse')
+print(r8,r8.content.decode())
 
 
 ''' 
