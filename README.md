@@ -54,44 +54,6 @@ Will work on different modules in their own branches and merge to main after tho
     * Implement a simulation to send data via an example program to help users of your system
     * DOCUMENT INTERFACE WELL
     
-FOR NOW: HARD CODE DEVICE KEYS
-
-## DATABASE SCHEMA
-### **User** Database
-* Rows represent system users
-* Columns: 
-   * Unique ID
-   * First name
-   * Last name
-   * Address
-   * DOB
-   * Sex
-   * Role
-   * PCP (if patient) 
-### Health Measurements Database(s)
-* One of these for each data type (bp, weight, height, temp, etc.)
-* Rows represent readings
-* Each row has the following columns:
-   * **User** ID
-   * Value
-   * Time
-### Device Database
-* Device Name
-* MAC Address(?)
-* Device Key
-* Assigned **user**
-* Data types supported
-### Roles Database
-* Row for each role
-* Columns represent permissions for different actions (binary entries) for given users
-   * Create new user
-   * Make appointment
-   * View own data
-   * View others' data 
-### MP Database
-* 
-
-
 ### VM API SETUP:
 
 verify: `python3 app.py`
