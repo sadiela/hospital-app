@@ -2,7 +2,7 @@ import requests
 import json
 from flask import Flask, abort, request, jsonify, Blueprint
 #from helper import *
-import pymongo
+#import pymongo
 #import certifi
 from database_module.mongo_database import mongodb_client
 from marshmallow import Schema, fields, ValidationError

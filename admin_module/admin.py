@@ -43,6 +43,7 @@ def insertion_index(nums):
 class UserSchema(Schema):
     userid = fields.Int(required=True)
     username = fields.String(required=True)
+    email = fields.Email()
     role = fields.Int(required=True)
     devices = fields.List(fields.String)
     doctors = fields.List(fields.Int()) # list of userids
@@ -106,12 +107,22 @@ def get_patient_list(doctorid): # get all patients, doctors, or admins
     return jsonify(patient_ids), 200
 
 @admin_blueprint.route('/people/<roleid>', methods=['GET'])
-def get_user_list(roleid): # get all patients, doctors, or admins
+def get_role_list(roleid): # get all patients, doctors, or admins
     #desired_role = role_key[role]
     person_list = custom_find(people, 'role', int(roleid))
     if len(person_list)==0:
         print("NO PEOPLE WITH ROLE {role} FOUND")
         return "NO PEOPLE WITH ROLE {role} FOUND", 200
+    return jsonify(person_list), 200
+
+
+@admin_blueprint.route('/people', methods=['GET'])
+def get_user_list(): # get all patients, doctors, or admins
+    #desired_role = role_key[role]
+    person_list = custom_find(people)
+    if len(person_list)==0:
+        print("NO PEOPLEFOUND")
+        return "NO PEOPLE FOUND", 200
     return jsonify(person_list), 200
 
 @admin_blueprint.route('/add_user', methods=['GET', 'POST', 'PUT'])
